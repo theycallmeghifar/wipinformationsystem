@@ -9,6 +9,7 @@
         { 
             parent::__construct();
             $this->load->model("model_OrderItem");
+            $this->load->model("model_Location");
             $this->load->model("model_Item");
             $this->load->library('session');
             $this->load->library('phpqrcode/qrlib');
@@ -23,7 +24,31 @@
         {
             $getData["getData"] = $this->model_OrderItem->getAllOrderItemMod();
             $getData["item"] = $this->model_Item->getActiveItemMod();
+            $getData["location"] = $this->model_Location->getLocationByAreaMod('Machining');
             $this->load->view('UI/OrderItem', $getData);
+        }
+
+        public function getOrderData()
+        {
+            $data = $this->model_OrderItem->getAllOrderItemMod();
+            header('Content-Type: application/json'); // Pastikan response JSON
+            echo json_encode($data);
+        }
+
+        public function getOrderItemData()
+        {
+            $itemCode = $this->input->get('itemCode');
+    
+            $data = $this->model_OrderItem->getItemReadyOrderMod($itemCode);
+            echo json_encode($data);
+        }
+
+        public function getOrderCavityData()
+        {
+            $cavity = $this->input->get('cavity');
+
+            $data = $this->model_OrderItem->getCavityReadyOrderMod($cavity);
+            echo json_encode($data);
         }
 
         public function saveOrderItemCon()
@@ -33,8 +58,9 @@
 
             $data = array(
                 'itemCode' => strtoupper($this->input->post('itemCode')),
+                'cavity' => $this->input->post('cavity'),
                 'quantity' => $this->input->post('quantity'),
-                'status' => 1,
+                'status' => 0,
                 'createdBy' => isset($userSession['username']) ? $userSession['username'] : '',
                 'createdDate' => date("Y-m-d H:i:s")
             );

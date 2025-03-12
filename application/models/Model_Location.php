@@ -9,14 +9,9 @@
       return $this->db->get($this->tableLocation)->result();
     }
 
-    public function getMachiningLocationMod()
+    public function getLocationByAreaMod($area)
     {
-      return $this->db->where('location', 'Machining')->get($this->tableLocation)->result();
-    }
-
-    public function getWipLocationMod()
-    {
-      return $this->db->where('location', 'WIP')->get($this->tableLocation)->result();
+      return $this->db->where('location', $area)->get($this->tableLocation)->result();
     }
 
     public function getLocationByIdMod($id)

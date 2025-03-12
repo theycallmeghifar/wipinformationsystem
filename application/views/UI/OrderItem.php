@@ -60,11 +60,12 @@
                             <?php } ?>
                         </div>
                         <div class="card-body">
-                            <table id="dataTable" class="display nowrap table-striped table" style="width:100%" >
+                            <table id="dataTable" data-order='[[6, "desc"]]' class="display nowrap table-striped table" style="width:100%" >
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Item</th>
+                                        <th>Line</th>
+                                        <th>Item/Cavity</th>
                                         <th>Jumlah</th>
                                         <th>Status</th>
                                         <?php if ($this->session->userdata('role') == 1) { ?>
@@ -80,18 +81,19 @@
                                         foreach($getData as $data){
                                     ?>
                                     <tr>                             
-                                        <td><?php echo $data->orderItemId?></td>
+                                        <td><?php echo $data->orderId?></td>
+                                        <td><?php echo $data->line?></td>
                                         <td><?php echo $data->itemCode?></td>
                                         <td><?php echo $data->quantity?></td>
-                                        <td><?php if($data->status == 0){
-                                            echo "Confirmed";
-                                        }else{ 
-                                            echo "Pending";
-                                        }?></td>
+                                        <td><?php echo $data->statusText?></td>
                                         <?php if ($this->session->userdata('role') == 1) { ?>
                                             <td>
-                                                <a href="javascript:void(0);" class="fa fa-check color-muted editbtn" title="Confirm Order" style="margin-left: 15px;"></a>
-                                                <a href="javascript:void(0);" class="fa fa-close color-muted detailbtn" title="Reject Order" style="margin-left: 15px;"></a>
+                                                <?php if ($data->status == 1) { ?>
+                                                    <a href="javascript:void(0);" class="fa fa-check color-muted editbtn" title="Confirm Order" style="margin-left: 15px;"></a>
+                                                    <a href="javascript:void(0);" class="fa fa-close color-muted detailbtn" title="Reject Order" style="margin-left: 15px;"></a>
+                                                <?php } else if ($data->status != 1) { ?>
+                                                    -
+                                                <?php } ?>
                                             </td>
                                         <?php } ?>
                                         <td hidden="true"><?php echo $data->status?></td>
@@ -123,23 +125,18 @@
                                 <form role="form" action="<?php echo site_url('OrderItem/saveOrderItemCon')?>" method="post" autocomplete="off">
                                     <div class="row">
                                         <div class="col-md-7">
-                                            <table id="dataTable" class="display nowrap table-striped table" style="width:100%">
+                                            <table id="modalTableHead" class="display nowrap table-striped table" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>ItemCode</th>
                                                         <th>Item</th>
-                                                        <th>Cavity</th>
                                                         <th>Stok</th>
                                                     </tr>
                                                 </thead>
+                                                <tbody>
+                                                    
+                                                </tbody>
                                             </table>
-                                            <div style="max-height: 350px; overflow-y: auto;">
-                                                <table id="dataTableBody" class="display nowrap table-striped table" style="width:100%">
-                                                    <tbody>
-                                                        
-                                                    </tbody>
-                                                </table>
-                                            </div>
                                         </div>
                                         <div class="col-md-5">
                                             <div class="form-group align-items-center">
@@ -150,6 +147,20 @@
                                                 <div class="custom-control custom-radio d-block">
                                                     <input class="custom-control-input" type="radio" id="TypeRadio2" name="customRadio">
                                                     <label for="TypeRadio2" class="custom-control-label">Cavity</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center">
+                                                <label class="col-sm-5 col-form-label text-label">Line<span style="color: red">*</span></label>
+                                                <div class="col-sm-7">
+                                                    <div class="input-group">
+                                                        <select name="line" id="line" class="form-control select2" style="width: 180px;">
+                                                            <?php foreach ($location as $row) : ?> 
+                                                                <option value="<?= $row->locationId ?>" <?= ($row->locationId == set_value('locationId') ? 'selected' : '') ?> >
+                                                                    <?= $row->line ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="form-group row align-items-center">
@@ -353,36 +364,6 @@
                     </div>
                 </div>
 <!-- end DETAIL DATA-->
-<!-- IMPORT DATA -->
-<div class="modal fade" id="importData" tabindex="-1" role="dialog" aria-labelledby="importData" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-        <form action="<?php echo base_url('Box/importExcelBoxCon') ?>" method="POST" enctype="multipart/form-data">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Import Data</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" style="width:350px;">
-                    <div class="form-group row align-items-center">
-                        <label class="col-sm-5 col-form-label text-label">Pilih File<span style="color: red">*</span></label>
-                        <div class="col-sm-7">
-                            <div class="input-group">
-                                <input type="file" id="file" name="file" class="form-control form-control-user" accept=".xlsx, .xls" required>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" id="submit" name="submit" class="btn btn-primary shadow-sm">Import</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-    <!-- end IMPORT DATA-->
 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <!-- END MODAL -->
             </div>
@@ -396,6 +377,53 @@ $data = ob_get_clean();
 <!-- SCRIPT -->
 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
     <script>
+        function fetchOrderItems() {
+            var role = <?= json_encode($this->session->userdata('role')) ?>;
+            
+            $.ajax({
+                url: "<?= base_url('orderitem/getOrderData') ?>",
+                type: "GET",
+                dataType: "json", 
+                success: function(data) {
+                    let tableRows = "";
+                    data.forEach(function(item) {
+                        let actionButtons = "";
+
+                        if (role == 1 && item.status == 1) {
+                            actionButtons = `
+                                <td>
+                                    <a href="javascript:void(0);" class="fa fa-check color-muted editbtn" title="Confirm Order" style="margin-left: 15px;"></a>
+                                    <a href="javascript:void(0);" class="fa fa-close color-muted detailbtn" title="Reject Order" style="margin-left: 15px;"></a>
+                                </td>
+                            `;
+                        } else if (role == 1 && item.status != 1) {
+                            actionButtons = `<td>-</td>`;
+                        }
+
+                        tableRows += `
+                            <tr>                             
+                                <td>${item.orderId}</td>
+                                <td>${item.line}</td>
+                                <td>${item.itemCode}</td>
+                                <td>${item.quantity}</td>
+                                <td>${item.statusText}</td>
+                                ${actionButtons}
+                                <td hidden="true">${item.status}</td>
+                                <td hidden="true">${item.createdDate}</td>
+                                <td hidden="true">${item.modifiedDate}</td>
+                            </tr>
+                        `;
+                    });
+                    $("#dataTable tbody").html(tableRows);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
+        }
+
+        setInterval(fetchOrderItems, 1000);
+
         $(document).ready(function() {
             // Inisialisasi Select2 pada dropdown yang sudah ada di halaman
             $(".select2").select2({
@@ -477,14 +505,106 @@ $data = ob_get_clean();
         $('#cavity').closest('.form-group.row').hide();
 
         // Event ketika radio button berubah
+        //ubah tabel
+        function updateModalTable() {
+            if ($('#TypeRadio1').is(':checked')) {
+                $('#modalTableHead thead').html(`
+                    <tr>
+                        <th>Kode Item</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                    </tr>
+                `);
+
+                let itemCode = $('#itemCode').val();
+                let cavity = $('#cavity').val();
+
+                $.ajax({
+                    url: '<?= base_url("OrderItem/getOrderItemData") ?>',
+                    type: 'GET',
+                    data: { itemCode: itemCode }, 
+                    dataType: 'json',
+                    success: function(response) {
+                        let rows = '';
+                        response.forEach(function(data) {
+                            rows += `
+                                <tr>                             
+                                    <td>${data.itemCode}</td>
+                                    <td>${data.itemName}</td>
+                                    <td>${data.quantity}</td>
+                                </tr>
+                            `;
+                        });
+                        $('#modalTableHead tbody').html(rows);
+                    }
+                });
+
+            } else if ($('#TypeRadio2').is(':checked')) {
+                $('#modalTableHead thead').html(`
+                    <tr>
+                        <th>Cavity</th>
+                        <th>Quantity</th>
+                    </tr>
+                `);
+
+                let itemCode = $('#itemCode').val();
+                let cavity = $('#cavity').val();
+
+                $.ajax({
+                    url: '<?= base_url("OrderItem/getOrderCavityData") ?>',
+                    type: 'GET',
+                    data: { cavity: cavity },
+                    dataType: 'json',
+                    success: function(response) {
+                        let rows = '';
+                        response.forEach(function(data) {
+                            rows += `
+                                <tr>                             
+                                    <td>${data.cavity}</td>
+                                    <td>${data.quantity}</td>
+                                </tr>
+                            `;
+                        });
+                        $('#modalTableHead tbody').html(rows);
+                    }
+                });
+            }
+        }
+
+        updateModalTable();
+
+        document.getElementById("submit").addEventListener("click", function (event) {
+            let itemCode = document.getElementById("itemCode").value;
+            let line = document.getElementById("line").value;
+            let cavity = document.getElementById("cavity").value;
+            let quantity = document.getElementById("quantity").value;
+
+            if (!itemCode || !line || !cavity) {
+                event.preventDefault();
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan!',
+                    text: 'Harap isi semua data terlebih dahulu.',
+                });
+            }
+        });
+
+        // Event listener untuk radio button
         $('input[name="customRadio"]').on('change', function(){
-            if ($('#TypeRadio1').is(':checked')) { // Jika "Item" dipilih
+            updateModalTable();
+            if ($('#TypeRadio1').is(':checked')) { 
                 $('#itemCode').closest('.form-group.row').show();
                 $('#cavity').closest('.form-group.row').hide();
-            } else if ($('#TypeRadio2').is(':checked')) { // Jika "Cavity" dipilih
+            } else if ($('#TypeRadio2').is(':checked')) { 
                 $('#itemCode').closest('.form-group.row').hide();
                 $('#cavity').closest('.form-group.row').show();
             }
+        });
+
+        // Event listener untuk dropdown
+        $('#cavity, #itemCode').on('change', function () {
+            updateModalTable();
         });
 
         $('#btnPrint').on("click", function(e) {

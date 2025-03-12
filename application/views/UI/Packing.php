@@ -257,7 +257,7 @@ $data = ob_get_clean();
             // Inisialisasi Select2 pada dropdown yang sudah ada di halaman
             $(".select2").select2({
                 theme: 'bootstrap4',
-                placeholder: "Pilih Item",
+                placeholder: "Pilih Data",
                 allowClear: true,
                 dropdownParent: $("#addModal")
             });
@@ -284,7 +284,7 @@ $data = ob_get_clean();
                 // Inisialisasi Select2 pada elemen baru
                 $(".select2").select2({
                     theme: 'bootstrap4',
-                    placeholder: "Pilih Item",
+                    placeholder: "Pilih Data",
                     allowClear: true,
                     dropdownParent: $("#addModal")
                 });
@@ -304,7 +304,7 @@ $data = ob_get_clean();
                     Swal.fire({
                         icon: "warning",
                         title: "Peringatan!",
-                        text: "Silakan pilih Kode Box terlebih dahulu.",
+                        text: "Harap isi semua data terlebih dahulu.",
                         confirmButtonColor: "#3085d6",
                         confirmButtonText: "OK"
                     });
@@ -317,7 +317,7 @@ $data = ob_get_clean();
                         Swal.fire({
                             icon: "warning",
                             title: "Peringatan!",
-                            text: "Silakan pilih semua Kode Item sebelum menyimpan!",
+                            text: "Harap isi semua data terlebih dahulu.",
                             confirmButtonColor: "#3085d6",
                             confirmButtonText: "OK"
                         });

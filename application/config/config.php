@@ -23,10 +23,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-//$config['base_url'] = 'http://www.fim.co.id:9080/WipTrackingSystem/';
-//$config['base_url'] = 'http://portal.fim.co.id:9080/WipTrackingSystem/';
-//$config['base_url'] = 'http://192.168.1.10:9080/WipTrackingSystem/';
-$config['base_url'] = 'http://localhost/WipTrackingSystem/';
+//$config['base_url'] = 'http://www.fim.co.id:9080/wipinformationsystem/';
+//$config['base_url'] = 'http://portal.fim.co.id:9080/wipinformationsystem/';
+//$config['base_url'] = 'http://192.168.1.10:9080/wipinformationsystem/';
+$config['base_url'] = 'http://localhost/wipinformationsystem/';
 
 /*
 |--------------------------------------------------------------------------

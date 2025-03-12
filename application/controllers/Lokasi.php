@@ -20,7 +20,7 @@
 
         public function index()
         {
-            $getData["getData"] = $this->model_Location->getMachiningLocationMod();
+            $getData["getData"] = $this->model_Location->getLocationByAreaMod('Machining');
             $this->load->view('UI/Lokasi', $getData);
         }
 
@@ -62,7 +62,7 @@
 
         public function ExportExcelLocationCon()
         {
-            $data = $this->model_Location->getMachiningLocationMod();
+            $data = $this->model_Location->getLocationByAreaMod('Machining');
 
             if (empty($data)) {
                 $this->session->set_flashdata('error', "Tidak ada data untuk di-export!");

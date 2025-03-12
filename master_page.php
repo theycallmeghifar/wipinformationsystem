@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>WIP Tracking System FIM</title>
+    <title>WIP Information System FIM</title>
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/adminlte3.2/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -85,9 +85,9 @@
       <!-- Main Sidebar Container -->
       <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="<?php echo site_url('Dashboard'); ?>" class="brand-link">
+        <a href="" class="brand-link">
           <img src="<?php echo base_url() ?>assets/adminlte3.2/dist/img/FIM_Logo.png" alt="FIM Logo" class="brand-image" style="opacity: 1.0">
-          <span class="brand-text font-weight-light">WIP Tracking System</span>
+          <span class="brand-text font-weight-light">WIS</span>
         </a>
         <!-- Sidebar -->
         <div class="sidebar">
