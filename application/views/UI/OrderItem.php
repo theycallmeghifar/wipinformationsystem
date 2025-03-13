@@ -83,7 +83,7 @@
                                     <tr>                             
                                         <td><?php echo $data->orderId?></td>
                                         <td><?php echo $data->line?></td>
-                                        <td><?php echo $data->itemCode?></td>
+                                        <td><?php echo $data->itemCode ? $data->itemCode : $data->cavity; ?></td>
                                         <td><?php echo $data->quantity?></td>
                                         <td><?php echo $data->statusText?></td>
                                         <?php if ($this->session->userdata('role') == 1) { ?>
@@ -122,10 +122,10 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form role="form" action="<?php echo site_url('OrderItem/saveOrderItemCon')?>" method="post" autocomplete="off">
+                                <form role="form" action="<?php echo site_url('OrderItem/saveOrderItemCon')?>" method="post" autocomplete="off" style="margin: 30px;">
                                     <div class="row">
                                         <div class="col-md-7">
-                                            <table id="modalTableHead" class="display nowrap table-striped table" style="width:100%">
+                                            <table id="modalTable" class="display nowrap table-striped table" style="width:100%">
                                                 <thead>
                                                     <tr>
                                                         <th>ItemCode</th>
@@ -277,93 +277,6 @@
                     </div>
                 </div>
 <!-- end UBAH DATA-->
-<!-- DETAIL-->
-                <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailData" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document" >
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Detail Data</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body" style="width: 410px;">
-                                    <div class="row match-height">
-                                        <div class="col-12">
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Box Code</label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                        <input type="text" id="boxCodeD" name="boxCodeD" class="form-control form-control-user" disabled required></input>
-                                                    </div> 
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Box Color</label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                    <select name="boxColorD" id="boxColorD" class="form-control form-control-user" style="width: 180px;" disabled>
-                                                        <option value='Red'>Red</option>
-                                                        <option value='Yellow'>Yellow</option>
-                                                        <option value='Green'>Green</option>
-                                                        <option value='Blue'>Blue</option>
-                                                    </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Capacity</label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                    <input type="number" id="capacityD" name="capacityD" class="form-control form-control-user" placeholder="Numbers only" required min="1" disabled></input>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Usage Status</label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                    <input type="text" id="usageStatusD" name="usageStatusD" class="form-control form-control-user" disabled></input>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Status</label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                        <select name="statusD" id="statusD" class="form-control form-control-user" style="width: 180px;" disabled>
-                                                            <option value='1'>Active</option>
-                                                            <option value='0'>Inactive</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Created Date</label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                    <input type="text" id="createdDateD" name="createdDateD" class="form-control form-control-user" disabled></input>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">modified Date</label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                    <input type="text" id="modifiedDateD" name="modifiedDateD" class="form-control form-control-user" disabled></input>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-<!-- end DETAIL DATA-->
 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <!-- END MODAL -->
             </div>
@@ -381,7 +294,7 @@ $data = ob_get_clean();
             var role = <?= json_encode($this->session->userdata('role')) ?>;
             
             $.ajax({
-                url: "<?= base_url('orderitem/getOrderData') ?>",
+                url: "<?= base_url('orderitem/getAllOrderDataCon') ?>",
                 type: "GET",
                 dataType: "json", 
                 success: function(data) {
@@ -404,7 +317,7 @@ $data = ob_get_clean();
                             <tr>                             
                                 <td>${item.orderId}</td>
                                 <td>${item.line}</td>
-                                <td>${item.itemCode}</td>
+                                <td>${item.itemCode ? item.itemCode : item.cavity}</td>
                                 <td>${item.quantity}</td>
                                 <td>${item.statusText}</td>
                                 ${actionButtons}
@@ -508,7 +421,7 @@ $data = ob_get_clean();
         //ubah tabel
         function updateModalTable() {
             if ($('#TypeRadio1').is(':checked')) {
-                $('#modalTableHead thead').html(`
+                $('#modalTable thead').html(`
                     <tr>
                         <th>Kode Item</th>
                         <th>Item</th>
@@ -520,7 +433,7 @@ $data = ob_get_clean();
                 let cavity = $('#cavity').val();
 
                 $.ajax({
-                    url: '<?= base_url("OrderItem/getOrderItemData") ?>',
+                    url: '<?= base_url("OrderItem/getOrderItemDataCon") ?>',
                     type: 'GET',
                     data: { itemCode: itemCode }, 
                     dataType: 'json',
@@ -535,12 +448,12 @@ $data = ob_get_clean();
                                 </tr>
                             `;
                         });
-                        $('#modalTableHead tbody').html(rows);
+                        $('#modalTable tbody').html(rows);
                     }
                 });
 
             } else if ($('#TypeRadio2').is(':checked')) {
-                $('#modalTableHead thead').html(`
+                $('#modalTable thead').html(`
                     <tr>
                         <th>Cavity</th>
                         <th>Quantity</th>
@@ -565,7 +478,7 @@ $data = ob_get_clean();
                                 </tr>
                             `;
                         });
-                        $('#modalTableHead tbody').html(rows);
+                        $('#modalTable tbody').html(rows);
                     }
                 });
             }

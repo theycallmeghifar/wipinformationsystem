@@ -9,16 +9,18 @@
       return $this->db->get($this->tableLocation)->result();
     }
 
-    public function getLocationByAreaMod($area)
-    {
-      return $this->db->where('location', $area)->get($this->tableLocation)->result();
-    }
-
     public function getLocationByIdMod($id)
     {
       $this->db->where('locationId', $id);
-      return $this->db->get($this->tableLocation)->result();
+      $query = $this->db->get($this->tableLocation);
+      return $query->row_array();
     }
+
+    public function getLocationByAreaMod($area)
+    {
+      return $this->db->where('area', $area)->get($this->tableLocation)->result();
+    }
+
 
     public function saveLocationMod($data)
     {

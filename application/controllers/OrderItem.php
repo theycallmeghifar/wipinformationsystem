@@ -28,14 +28,14 @@
             $this->load->view('UI/OrderItem', $getData);
         }
 
-        public function getOrderData()
+        public function getAllOrderDataCon()
         {
             $data = $this->model_OrderItem->getAllOrderItemMod();
             header('Content-Type: application/json'); // Pastikan response JSON
             echo json_encode($data);
         }
 
-        public function getOrderItemData()
+        public function getOrderItemDataCon()
         {
             $itemCode = $this->input->get('itemCode');
     

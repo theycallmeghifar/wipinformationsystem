@@ -63,7 +63,7 @@
                                         <h6 style="text-align: center;">
                                             <?php 
                                                 echo $type == 'item' ? $d->itemName : 
-                                                    ($type == 'location' ? $d->location . ' - ' . $d->line : $d->boxColor); 
+                                                    ($type == 'location' ? $d->area . ' - ' . $d->line : $d->boxColor); 
                                             ?>
                                         </h6>
                                     </div>

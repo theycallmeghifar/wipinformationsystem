@@ -47,10 +47,12 @@
       $this->db->from('wip_box_detail wbd');
       $this->db->join('wip_box wb', 'wbd.wipBoxId = wb.wipBoxId');
       $this->db->join('item i', 'wbd.itemCode = i.itemCode');
+      $this->db->join('location l', 'l.locationId = wb.locationId');
       $this->db->where('wb.status', 1);
       if (!empty($itemCode)) {
         $this->db->where('wbd.itemCode', $itemCode);
       }
+      $this->db->where('l.area', 'WIP');
       $this->db->group_by('wbd.itemCode');
 
       $query = $this->db->get();
@@ -62,10 +64,12 @@
       $this->db->select('wb.cavity, SUM(wbd.quantity) as quantity');
       $this->db->from('wip_box wb');
       $this->db->join('wip_box_detail wbd', 'wb.wipBoxId = wbd.wipBoxId');
+      $this->db->join('location l', 'l.locationId = wb.locationId');
       $this->db->where('wb.status', 1);
       if (!empty($cavity)) {
         $this->db->where('wb.cavity', $cavity);
       }
+      $this->db->where('l.area', 'WIP');
       $this->db->group_by('wb.cavity');
 
       $query = $this->db->get();

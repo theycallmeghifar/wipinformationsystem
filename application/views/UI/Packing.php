@@ -73,7 +73,7 @@
                                         <td>
                                             <?php foreach ($location as $row) {
                                                 if ($data->locationId == $row->locationId) {
-                                                    echo $row->location;
+                                                    echo $row->area;
                                                 }
                                             }
                                             if ($data->locationId == "0" ){
@@ -136,6 +136,18 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-sm-5 col-form-label text-label">Tanggal Produksi<span style="color: red">*</span></label>
+                                        <div class="col-sm-7">
+                                            <input type="date" class="form-control" id="productionDate" name="productionDate" required></input>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-sm-5 col-form-label text-label">Cavity<span style="color: red">*</span></label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control" id="cavity" name="cavity" required></input>
+                                        </div>
+                                    </div>
 
                                     <div class="form-group">
                                         <table class="table">
@@ -195,17 +207,9 @@
                                     <div class="form-group row align-items-center">
                                         <label class="col-sm-5 col-form-label text-label">Kode Box</label>
                                         <div class="col-sm-7">
-                                            <select class="form-control" id="boxCodeD" name="boxCodeD" disabled>
-                                                <option disabled selected>Pilih Box</option>
-                                                <?php foreach ($box as $row) : ?>
-                                                    <option value="<?= $row->boxCode ?>" <?= ($row->boxCode == set_value('boxCode') ? 'selected' : '') ?>>
-                                                        <?= $row->boxCode ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
+                                            <input type="text" class="form-control" id="boxCodeD" name="boxCodeD" disabled></input>
                                         </div>
                                     </div>
-
                                     <div class="form-group">
                                         <table id="itemTable" class="table">
                                             <thead>
@@ -217,7 +221,7 @@
                                             <tbody id="tableBody">
                                                 <tr>
                                                     <td>
-                                                        <select class="form-control" name="itemCode[]">
+                                                        <select class="form-control" name="itemCodeD[]">
                                                             <option disabled selected>Pilih Item</option>
                                                             <?php foreach ($item as $row) : ?>
                                                                 <option value="<?= $row->itemCode ?>" <?= ($row->itemCode == set_value('itemCode') ? 'selected' : '') ?>>
@@ -295,12 +299,13 @@ $data = ob_get_clean();
                 $(this).closest("tr").remove();
             });
 
-            $("#submit").click(function(event){
+            $("#submit").click(function(event) {
                 let isValid = true;
                 let boxCode = $("#boxCode").val();
+                console.log(boxCode);
 
                 // Cek apakah Kode Box sudah dipilih
-                if (!boxCode || boxCode === "Select Box") {
+                if (!boxCode) {
                     Swal.fire({
                         icon: "warning",
                         title: "Peringatan!",
@@ -312,8 +317,9 @@ $data = ob_get_clean();
                 }
 
                 // Cek apakah semua Kode Item telah dipilih
-                $("select[name='itemCode[]']").each(function(){
-                    if ($(this).val() === null || $(this).val() === "Select Item") {
+                $("select[name='itemCode[]']").each(function() {
+                    console.log($(this).val());
+                    if ($(this).val() === null) {
                         Swal.fire({
                             icon: "warning",
                             title: "Peringatan!",

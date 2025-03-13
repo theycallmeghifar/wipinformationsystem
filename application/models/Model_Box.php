@@ -15,7 +15,7 @@
       return $this->db->get($this->tableBox)->result();
     }
 
-    public function getActiveAndNotUsedBoxMod()
+    public function getActiveAndUnusedBoxMod()
     {
       $this->db->where('usageStatus', 0);
       $this->db->where('status', 1);

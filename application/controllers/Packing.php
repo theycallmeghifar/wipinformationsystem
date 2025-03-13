@@ -25,7 +25,7 @@
         public function index()
         {
             $getData["getData"] = $this->model_WipBox->getAllWipBoxMod();
-            $getData["box"] = $this->model_Box->getActiveAndNotUsedBoxMod();
+            $getData["box"] = $this->model_Box->getActiveAndUnusedBoxMod();
             $getData["item"] = $this->model_Item->getActiveItemMod();
             $getData["location"] = $this->model_Location->getAllLocationMod();
             $getData["wipBoxDetail"] = $this->model_WipBoxDetail->getAllWipBoxDetailMod();
@@ -39,6 +39,8 @@
 
             $data = array(
                 'boxCode' => strtoupper($this->input->post('boxCode')),
+                'productionDate' => $this->input->post('productionDate'),
+                'cavity' => $this->input->post('cavity'),
                 'locationId' => 1,
                 'status' => 1,
                 'createdBy' => isset($userSession['username']) ? $userSession['username'] : '',

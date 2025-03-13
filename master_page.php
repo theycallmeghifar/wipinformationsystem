@@ -111,12 +111,12 @@
                 <?= ($activePage == 'MasterData') ? 'menu-open':''; ?> 
                 <?= ($activePage == 'Item') ? 'menu-open':''; ?> 
                 <?= ($activePage == 'Box') ? 'menu-open':''; ?>
-                <?= ($activePage == 'Lokasi') ? 'menu-open':''; ?>">
+                <?= ($activePage == 'Location') ? 'menu-open':''; ?>">
                 <a href="#" class="nav-link 
                 <?= ($activePage == 'MasterData') ? 'active':''; ?> 
                 <?= ($activePage == 'Item') ? 'active':''; ?> 
                 <?= ($activePage == 'Box') ? 'active':''; ?>
-                <?= ($activePage == 'Lokasi') ? 'active':''; ?>">
+                <?= ($activePage == 'Location') ? 'active':''; ?>">
                   <i class="nav-icon fas fa-clipboard"></i>
                   <p>
                     Master Data
@@ -142,7 +142,7 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="<?php echo site_url('Lokasi'); ?>" class="nav-link <?= ($activePage == 'Lokasi') ? 'active':''; ?>">
+                    <a href="<?php echo site_url('Location'); ?>" class="nav-link <?= ($activePage == 'Location') ? 'active':''; ?>">
                       <i class="nav-icon fas ion-location"></i>
                       <p>
                         Lokasi
