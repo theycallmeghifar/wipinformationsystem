@@ -98,15 +98,41 @@
               with font-awesome or any other icon font library -->
               <li class="nav-header">MENU</li>
               <?php if ($this->session->userdata('role') == 1) { ?>
-              <li class="nav-item">
-                <a href="<?php echo site_url('OrderItem'); ?>" class="nav-link <?= ($activePage == 'OrderItem') ? 'active':''; ?>">
+              <li class="nav-item
+                <?= ($activePage == 'Pesanan') ? 'menu-open':''; ?> 
+                <?= ($activePage == 'OrderItem') ? 'menu-open':''; ?> 
+                <?= ($activePage == 'BoxDipesan') ? 'menu-open':''; ?>">
+                <a href="#" class="nav-link 
+                <?= ($activePage == 'Pesanan') ? 'active':''; ?> 
+                <?= ($activePage == 'OrderItem') ? 'active':''; ?> 
+                <?= ($activePage == 'BoxDipesan') ? 'active':''; ?>">
                   <i class="nav-icon fas ion-clipboard"></i>
                   <p>
-                    Pesanan Barang
-                    <span class="badge badge-info right"></span>
+                    Pesanan
+                    <i class="fas fa-angle-left right"></i>
                   </p>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="<?php echo site_url('OrderItem'); ?>" class="nav-link <?= ($activePage == 'OrderItem') ? 'active':''; ?>">
+                      <i class="nav-icon ion-document-text"></i>
+                      <p>
+                        Pesanan Item
+                        <span class="badge badge-info right"></span>
+                      </p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="<?php echo site_url('Box'); ?>" class="nav-link <?= ($activePage == 'BoxDipesan') ? 'active':''; ?>">
+                      <i class="nav-icon ion-ios-cart"></i>
+                      <p>
+                        Box Dipesan
+                      </p>
+                    </a>
+                  </li>
+                </ul>
               </li>
+
               <li class="nav-item
                 <?= ($activePage == 'MasterData') ? 'menu-open':''; ?> 
                 <?= ($activePage == 'Item') ? 'menu-open':''; ?> 

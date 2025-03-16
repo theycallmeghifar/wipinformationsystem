@@ -1,9 +1,9 @@
-    <?php
+<?php
     defined('BASEPATH') OR exit('No direct script access allowed');
     require 'vendor/autoload.php';
     use PhpOffice\PhpSpreadsheet\IOFactory;
 
-    class OrderItem extends CI_Controller {
+    class OrderedBox extends CI_Controller {
 
         public function __construct()
         { 
@@ -25,7 +25,7 @@
             $getData["getData"] = $this->model_OrderItem->getAllOrderItemMod();
             $getData["item"] = $this->model_Item->getActiveItemMod();
             $getData["location"] = $this->model_Location->getLocationByAreaMod('Machining');
-            $this->load->view('UI/OrderItem', $getData);
+            $this->load->view('UI/OrderBox', $getData);
         }
 
         public function getAllOrderDataCon()
@@ -43,20 +43,11 @@
             echo json_encode($data);
         }
 
-        public function getOrderCavityDataCon()
+        public function getOrderCavityData()
         {
             $cavity = $this->input->get('cavity');
 
             $data = $this->model_OrderItem->getCavityReadyOrderMod($cavity);
-            echo json_encode($data);
-        }
-        
-        public function getMatchingBoxCon()
-        {
-            $item = $this->input->get('item');
-            $quantity = $this->input->get('quantity');
-
-            $data = $this->model_OrderItem->getMatchingBoxItemMod($item, $quantity);
             echo json_encode($data);
         }
 

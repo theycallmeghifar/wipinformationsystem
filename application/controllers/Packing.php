@@ -58,6 +58,7 @@
                     $details[] = array(
                         'wipBoxId' => $insertedWipBoxId,
                         'itemCode' => $itemCode,
+                        'cavity' => $cavity,
                         'quantity' => $quantities[$index],
                         'createdBy' => isset($userSession['username']) ? $userSession['username'] : '',
                         'createdDate' => date("Y-m-d H:i:s")

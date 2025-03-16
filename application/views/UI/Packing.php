@@ -81,16 +81,15 @@
                                             } ?>
                                         </td>
                                         <td>
-                                            <?php if ($data->status == 0) {
-                                            echo "Pending";
-                                            } else if ($data->status == 1) { 
-                                                echo "Siap Produksi";
-                                            } else if ($data->status == 2) { 
-                                                echo "Dalam Produksi";
-                                            } else {
-                                                echo "Selesai";
-                                            }
-                                            ?>
+                                            <?php if ($data->status == 0) { ?>
+                                                <span class='badge badge-danger'>Pending</span>
+                                            <?php } else if ($data->status == 1) { ?>
+                                                <span class='badge badge-success'>Siap Produksi</span>
+                                            <?php } else if ($data->status == 2) { ?>
+                                                <span class='badge badge-warning'>Dalam Produksi</span>
+                                            <?php } else if ($data->status == 3) { ?>
+                                                <span class='badge badge-primary'>Selesai Produksi</span>
+                                            <?php } ?>
                                         </td>
                                         <td>
                                             <a href="javascript:void(0);" class="fa fa-tasks color-muted detailbtn" title="Detail Data" style="margin-left: 15px;"></a>

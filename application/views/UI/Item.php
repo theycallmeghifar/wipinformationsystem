@@ -97,11 +97,13 @@
                                         <td><?php echo $data->itemCode?></td>
                                         <td><?php echo $data->itemName?></td>
                                         <td><?php echo $data->cavity?></td>
-                                        <td><?php if($data->status == 0){
-                                            echo "Tidak Aktif";
-                                            }else{ 
-                                                echo "Aktif";
-                                            }?></td>
+                                        <td>
+                                            <?php if ($data->status == 0) { ?>
+                                                <span class='badge badge-danger'>Tidak Aktif</span>
+                                            <?php } else { ?>
+                                                <span class='badge badge-success'>Aktif</span>
+                                            <?php } ?>
+                                        </td>
                                         <td>
                                             <input class='form-check-input' type='checkbox' id='checkPrint' value='<?php echo $data->itemCode?>'/>
                                             <a href="javascript:void(0);" class="fa fa-pencil-square-o color-muted editbtn" title="Ubah Data" style="margin-left: 15px;"></a>

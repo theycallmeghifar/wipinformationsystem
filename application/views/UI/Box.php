@@ -98,16 +98,20 @@
                                         <td><?php echo $data->boxCode?></td>
                                         <td><?php echo $data->boxColor?></td>
                                         <td><?php echo $data->capacity?></td>
-                                        <td><?php if($data->usageStatus == 0){
-                                            echo "Kosong";
-                                        }else{ 
-                                            echo "Dipakai";
-                                        }?></td>
-                                        <td><?php if($data->status == 0){
-                                            echo "Tidak Aktif";
-                                            }else{ 
-                                                echo "Aktif";
-                                            }?></td>
+                                        <td>
+                                            <?php if ($data->usageStatus == 0) { ?>
+                                                <span class='badge badge-success'>Kosong</span>
+                                            <?php } else { ?>
+                                                <span class='badge badge-warning'>Dipakai</span>
+                                            <?php } ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($data->status == 0) { ?>
+                                                <span class='badge badge-danger'>Tidak Aktif</span>
+                                            <?php } else { ?>
+                                                <span class='badge badge-success'>Aktif</span>
+                                            <?php } ?>
+                                        </td>
                                         <td>
                                             <input class='form-check-input' type='checkbox' id='checkPrint' value='<?php echo $data->boxCode?>'/>
                                             <a href="javascript:void(0);" class="fa fa-pencil-square-o color-muted editbtn" title="Ubah Data" style="margin-left: 15px;"></a>

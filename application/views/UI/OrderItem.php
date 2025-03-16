@@ -60,7 +60,7 @@
                             <?php } ?>
                         </div>
                         <div class="card-body">
-                            <table id="dataTable" data-order='[[6, "desc"]]' class="display nowrap table-striped table" style="width:100%" >
+                            <table id="dataTable" data-order='[[7, "desc"]]' class="display nowrap table-striped table" style="width:100%" >
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -69,7 +69,7 @@
                                         <th>Jumlah</th>
                                         <th>Status</th>
                                         <?php if ($this->session->userdata('role') == 1) { ?>
-                                            <th>Action</th>
+                                            <th>Aksi</th>
                                         <?php } ?>
                                         <th hidden="true">Int Status</th>
                                         <th hidden="true">Created Date</th>
@@ -77,30 +77,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                        foreach($getData as $data){
-                                    ?>
-                                    <tr>                             
-                                        <td><?php echo $data->orderId?></td>
-                                        <td><?php echo $data->line?></td>
-                                        <td><?php echo $data->itemCode ? $data->itemCode : $data->cavity; ?></td>
-                                        <td><?php echo $data->quantity?></td>
-                                        <td><?php echo $data->statusText?></td>
-                                        <?php if ($this->session->userdata('role') == 1) { ?>
-                                            <td>
-                                                <?php if ($data->status == 1) { ?>
-                                                    <a href="javascript:void(0);" class="fa fa-check color-muted editbtn" title="Confirm Order" style="margin-left: 15px;"></a>
-                                                    <a href="javascript:void(0);" class="fa fa-close color-muted detailbtn" title="Reject Order" style="margin-left: 15px;"></a>
-                                                <?php } else if ($data->status != 1) { ?>
-                                                    -
-                                                <?php } ?>
-                                            </td>
-                                        <?php } ?>
-                                        <td hidden="true"><?php echo $data->status?></td>
-                                        <td hidden="true"><?php echo $data->createdDate?></td>
-                                        <td hidden="true"><?php echo $data->modifiedDate?></td>
-                                    </tr>
-                                    <?php } ?>
+                                    <!--diisi oleh ajax-->
                                 </tbody>
                             </table>
                         </div>
@@ -211,72 +188,47 @@
                     </div>
                 </div>
 <!-- end TAMBAH DATA-->
-<!-- UBAH DATA -->
-                <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document" >
+<!-- KONFIRMASI DATA -->
+                <div class="modal fade" id="acceptmodal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalScrollableTitle">Edit Data</h5>
+                                <h5 class="modal-title">Konfirmasi Pesanan</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form role="form" action="<?php echo site_url('Box/updateBoxCon')?>" method="post" autocomplete="off" enctype="multipart/form-data">
-                                <div class="modal-body" style="width: 410px;">
-                                    <div class="row match-height">
-                                        <div class="col-12">
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Box Code</label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                        <input type="text" id="boxCodeU" name="boxCodeU" class="form-control form-control-user" readonly required></input>
-                                                    </div> 
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Box Color<span style="color: red">*</span></label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                    <select name="boxColorU" id="boxColorU" class="form-control form-control-user" style="width: 180px;">
-                                                        <option value='Red'>Red</option>
-                                                        <option value='Yellow'>Yellow</option>
-                                                        <option value='Green'>Green</option>
-                                                        <option value='Blue'>Blue</option>
-                                                    </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Capacity<span style="color: red">*</span></label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                    <input type="number" id="capacityU" name="capacityU" class="form-control form-control-user" placeholder="Numbers only" required min="1"></input>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row align-items-center">
-                                                <label class="col-sm-5 col-form-label text-label">Status<span style="color: red">*</span></label>
-                                                <div class="col-sm-7">
-                                                    <div class="input-group">
-                                                    <select name="statusU" id="statusU" class="form-control form-control-user" style="width: 180px;">
-                                                        <option value='1'>Active</option>
-                                                        <option value='0'>Inactive</option>
-                                                    </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <form role="form" action="<?php echo site_url('orderItem/confirmOrderCon')?>" method="post" autocomplete="off" style="margin: 30px;">
+                                <div class="modal-body">
+                                    
+                                    <div class="form-group">
+                                        <table id="confirmationTable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th hidden="true">WIPBoxId</th>
+                                                    <th>Kode Box</th>
+                                                    <th>Kode Item</th>
+                                                    <th>Cavity</th>
+                                                    <th style="width: 100px;">Jumlah</th>
+                                                    <th>Hapus</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tableBody">
+                                                <!-- diisi oleh ajax -->
+                                            </tbody>
+                                        </table>
+                                        <p style="color:red">*Box pada tabel tidak dapat dipesan lagi.</p>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
-                                    <button ID="submit" name="updateData" class="btn btn-primary shadow-sm">Edit</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tolak</button>
+                                    <button type="submit" id="submit" class="btn btn-primary shadow-sm">Konfirmasi</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-<!-- end UBAH DATA-->
+<!-- end KONFIRMASI DATA-->
 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <!-- END MODAL -->
             </div>
@@ -302,15 +254,23 @@ $data = ob_get_clean();
                     data.forEach(function(item) {
                         let actionButtons = "";
 
-                        if (role == 1 && item.status == 1) {
+                        if (role == 1 && item.status == 0) {
                             actionButtons = `
                                 <td>
-                                    <a href="javascript:void(0);" class="fa fa-check color-muted editbtn" title="Confirm Order" style="margin-left: 15px;"></a>
-                                    <a href="javascript:void(0);" class="fa fa-close color-muted detailbtn" title="Reject Order" style="margin-left: 15px;"></a>
+                                    <a href="javascript:void(0);" class="fa fa-pencil color-muted confirmbtn" title="Confirm Order" style="margin-left: 15px;"></a>
                                 </td>
                             `;
                         } else if (role == 1 && item.status != 1) {
                             actionButtons = `<td>-</td>`;
+                        }
+
+                        let badgeClass = "bg-secondary";
+                        if (item.statusText === "Belum Dikonfirmasi") {
+                            badgeClass = "bg-warning";
+                        } else if (item.statusText === "Diterima") {
+                            badgeClass = "bg-primary";
+                        } else if (item.statusText === "Ditolak") {
+                            badgeClass = "bg-danger";
                         }
 
                         tableRows += `
@@ -319,7 +279,7 @@ $data = ob_get_clean();
                                 <td>${item.line}</td>
                                 <td>${item.itemCode ? item.itemCode : item.cavity}</td>
                                 <td>${item.quantity}</td>
-                                <td>${item.statusText}</td>
+                                <td><span class="badge ${badgeClass}">${item.statusText}</span></td>
                                 ${actionButtons}
                                 <td hidden="true">${item.status}</td>
                                 <td hidden="true">${item.createdDate}</td>
@@ -338,6 +298,8 @@ $data = ob_get_clean();
         setInterval(fetchOrderItems, 1000);
 
         $(document).ready(function() {
+            fetchOrderItems();
+
             // Inisialisasi Select2 pada dropdown yang sudah ada di halaman
             $(".select2").select2({
                 theme: 'bootstrap4',
@@ -346,70 +308,95 @@ $data = ob_get_clean();
                 dropdownParent: $("#addModal")
             });
             
-            $('.editbtn').on('click', function() {
-                // Menampilkan SweetAlert konfirmasi
-                Swal.fire({
-                    title: 'Confirm Order?',
-                    text: "Are you sure you want to confirm this order?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'No',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Jika user memilih "Yes", tampilkan modal
-                        $('#editmodal').modal('show');
-                        
-                        $tr = $(this).closest('tr');
-                        var data = $tr.children("td").map(function() {
-                            return $(this).text();
-                        }).get();
-                        console.log(data);
+            $(document).on('click', '.confirmbtn', function() {
+                let row = $(this).closest('tr');
+                let item = row.find('td:eq(2)').text().trim();
+                let quantity = row.find('td:eq(3)').text().trim();
 
-                        // Isi form dengan data yang ada pada baris tabel
-                        $('#boxCodeU').val(data[0]);
-                        $('#boxColorU').val(data[1]);
-                        $('#capacityU').val(data[2]);
-                        $('#statusU').val(data[7]);
-                    }
-                });
+                $.ajax({
+                url: "<?= base_url('orderitem/getMatchingBoxCon') ?>",
+                type: "GET",
+                data: { item: item, quantity: quantity }, 
+                dataType: "json", 
+                success: function(data) {
+                    let tableRows = "";
+                    data.forEach(function(item) {
+                        tableRows += `
+                            <tr>                             
+                                <td hidden="true">${item.wipBoxId}</td>
+                                <td>${item.boxCode}</td>
+                                <td>${item.itemCode}</td>
+                                <td>${item.cavity}</td>
+                                <td>${item.quantity}</td>
+                                <td><button type="button" class="btn btn-danger btn-sm removeRow"><i class="fas fa-trash" style="color:white"></i></button></td>
+                            </tr>
+                        `;
+                    });
+                    $("#confirmationTable tbody").html(tableRows);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching data:", error);
+                }
+            });
+
+                $('#acceptmodal').modal('show');
+            });
+
+            $("#confirmationTable").on("click", ".removeRow", function () {
+                let rowCount = $("#confirmationTable tbody tr").length;
+                
+                if (rowCount === 1) {
+                    Swal.fire({
+                        title: "Peringatan!",
+                        text: "Minimal ada 1 box yang harus di konfirmasi.",
+                        icon: "warning",
+                        confirmButtonText: "OK"
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Konfirmasi Hapus",
+                        text: "Apakah Anda yakin ingin menghapus box ini?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Hapus",
+                        cancelButtonText: "Batal"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $(this).closest("tr").remove();
+                        }
+                    });
+                }
             });
         });
 
-        $(document).ready(function(){
-            $('.detailbtn').on('click', function(){
-                // Menampilkan SweetAlert konfirmasi
-                Swal.fire({
-                    title: 'Reject Order?',
-                    text: "Are you sure you want to reject this order?",
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes',
-                    cancelButtonText: 'No',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Jika user memilih "Yes", tampilkan modal
-                        $('#detailModal').modal('show');
-                        
-                        $tr = $(this).closest('tr');
-                        var data = $tr.children("td").map(function() {
-                            return $(this).text();
-                        }).get();
-                        console.log(data);
+        $(document).on('click', '.rejectbtn', function() {
+            Swal.fire({
+                title: 'Reject Order?',
+                text: "Are you sure you want to reject this order?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#detailModal').modal('show');
 
-                        // Isi form dengan data yang ada pada baris tabel
-                        $('#boxCodeD').val(data[0]);
-                        $('#boxColorD').val(data[1]);
-                        $('#capacityD').val(data[2]);
-                        $('#locationD').val(data[3]);
-                        $('#usageStatusD').val(data[4]);
-                        $('#statusD').val(data[7]);
-                        $('#createdDateD').val(data[8]);
-                        $('#modifiedDateD').val(data[9]);
-                    }
-                });
+                    let $tr = $(this).closest('tr');
+                    let data = $tr.children("td").map(function() {
+                        return $(this).text();
+                    }).get();
+                    console.log(data);
+
+                    $('#boxCodeD').val(data[0]);
+                    $('#boxColorD').val(data[1]);
+                    $('#capacityD').val(data[2]);
+                    $('#locationD').val(data[3]);
+                    $('#usageStatusD').val(data[4]);
+                    $('#statusD').val(data[7]);
+                    $('#createdDateD').val(data[8]);
+                    $('#modifiedDateD').val(data[9]);
+                }
             });
         });
 
@@ -464,7 +451,7 @@ $data = ob_get_clean();
                 let cavity = $('#cavity').val();
 
                 $.ajax({
-                    url: '<?= base_url("OrderItem/getOrderCavityData") ?>',
+                    url: '<?= base_url("OrderItem/getOrderCavityDataCon") ?>',
                     type: 'GET',
                     data: { cavity: cavity },
                     dataType: 'json',

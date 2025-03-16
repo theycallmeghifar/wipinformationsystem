@@ -102,11 +102,13 @@
                                     <tr>                             
                                         <td><?php echo $data->locationId?></td>
                                         <td><?php echo $data->line?></td>
-                                        <td><?php if($data->status == 0){
-                                            echo "Tidak Aktif";
-                                            }else{ 
-                                                echo "Aktif";
-                                            }?></td>
+                                        <td>
+                                            <?php if ($data->status == 0) { ?>
+                                                <span class='badge badge-danger'>Tidak Aktif</span>
+                                            <?php } else { ?>
+                                                <span class='badge badge-success'>Aktif</span>
+                                            <?php } ?>
+                                        </td>
                                         <td>
                                             <input class='form-check-input' type='checkbox' id='checkPrint' value='<?php echo $data->locationId?>'/>
                                             <a href="javascript:void(0);" onclick="editButton(<?php echo $data->locationId ?>)" class="fa fa-pencil-square-o color-muted editbtn" title="Ubah Data" style="margin-left: 15px;"></a>
@@ -373,12 +375,18 @@ $data = ob_get_clean();
                     success: function(response) {
                         let rows = '';
                         response.forEach(function(data) {
-                            let statusText = data.status == 0 ? "Tidak Aktif" : "Aktif";
+                            let status;
+                            if (data.status == 0) {
+                                status = "<span class='badge badge-danger'>Tidak Aktif</span>";
+                            } else {
+                                status = "<span class='badge badge-success'>Aktif</span>";
+                            }
+
                             rows += `
                                 <tr>
                                     <td>${data.locationId}</td>
                                     <td>${data.line}</td>
-                                    <td>${statusText}</td>
+                                    <td>${status}</td>
                                     <td>
                                         <input class='form-check-input' type='checkbox' value='${data.locationId}'/>
                                         <a href="javascript:void(0);" onclick="editButton(${data.locationId})" class="fa fa-pencil-square-o color-muted editbtn" title="Ubah Data" style="margin-left: 15px;"></a>

@@ -75,5 +75,34 @@
       $query = $this->db->get();
       return $query->result_array();
     }
+
+    public function getMatchingBoxItemMod($item, $quantity)
+    {
+      $sql = "
+        WITH cte AS (
+          SELECT 
+            wb.wipBoxId,
+              wb.boxCode,
+              wbd.wipBoxDetailId, 
+              wbd.itemCode, 
+              wbd.cavity, 
+              wbd.quantity, 
+              SUM(wbd.quantity) OVER (PARTITION BY wbd.itemCode ORDER BY wipBoxDetailId) AS cumulative_quantity
+            FROM wip_box_detail wbd
+            JOIN wip_box wb ON wbd.wipBoxId = wb.wipBoxId
+            WHERE wbd.itemCode = ? 
+            OR wbd.cavity = ?
+        )
+        SELECT * FROM cte
+        WHERE cumulative_quantity <= ?  
+          OR (cumulative_quantity > ? AND cumulative_quantity - quantity < ?)
+        ORDER BY wipBoxId;
+      ";
+
+      // Jalankan query dengan parameter binding untuk keamanan
+      $query = $this->db->query($sql, [$item, $item, $quantity, $quantity, $quantity]);
+
+      return $query->result_array();
+    }
   }
 ?>
