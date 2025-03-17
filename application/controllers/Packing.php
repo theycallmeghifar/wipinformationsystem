@@ -42,6 +42,7 @@
                 'productionDate' => $this->input->post('productionDate'),
                 'cavity' => $this->input->post('cavity'),
                 'locationId' => 1,
+                'orderStatus' => 0,
                 'status' => 1,
                 'createdBy' => isset($userSession['username']) ? $userSession['username'] : '',
                 'createdDate' => date("Y-m-d H:i:s")
@@ -58,7 +59,6 @@
                     $details[] = array(
                         'wipBoxId' => $insertedWipBoxId,
                         'itemCode' => $itemCode,
-                        'cavity' => $cavity,
                         'quantity' => $quantities[$index],
                         'createdBy' => isset($userSession['username']) ? $userSession['username'] : '',
                         'createdDate' => date("Y-m-d H:i:s")

@@ -8,6 +8,7 @@
         public function __construct()
         { 
             parent::__construct();
+            $this->load->model("model_WipBox");
             $this->load->model("model_OrderItem");
             $this->load->model("model_Location");
             $this->load->model("model_Item");
@@ -60,21 +61,36 @@
             echo json_encode($data);
         }
 
-        public function saveOrderItemCon()
+        public function confirmOrderCon()
         {
             $userSession = $this->session->userdata();
             date_default_timezone_set('Asia/Jakarta');
 
-            $data = array(
-                'itemCode' => strtoupper($this->input->post('itemCode')),
-                'cavity' => $this->input->post('cavity'),
-                'quantity' => $this->input->post('quantity'),
-                'status' => 0,
-                'createdBy' => isset($userSession['username']) ? $userSession['username'] : '',
-                'createdDate' => date("Y-m-d H:i:s")
-            );
+            $postData = $this->input->post();
+            $wipBoxData = isset($postData['wipBoxData']) ? $postData['wipBoxData'] : [];
+            $action = isset($postData['action']) ? $postData['action'] : '';
+            $orderId = isset($postData['orderId']) ? $postData['orderId'] : '';
+            $status = ($action == 'accept') ? 1 : 2;
+            $orderStatus = ($action == 'accept') ? 1 : 0;
 
-            $insert = $this->model_OrderItem->saveOrderItemMod($data);
+            $orderData = array(
+                'orderId' => $orderId,
+                'status' => $status,
+                'modifiedBy' => 'wip',
+                'modifiedDate' => date("Y-m-d H:i:s")
+            );
+            $this->model_OrderItem->updateOrderStatusMod($orderData);
+
+            if (!empty($wipBoxData)) {
+                foreach ($wipBoxData as $item) {
+                    $data = array(
+                        'wipBoxId' => $item['wipBoxId'],
+                        'orderStatus' => $orderStatus,
+                    );
+                    $this->model_WipBox->updateWipBoxOrderStatusMod($data);
+                }
+            }
+
             $this->session->set_flashdata('success', "Data berhasil disimpan!");
             redirect(base_url('./OrderItem'));
         }

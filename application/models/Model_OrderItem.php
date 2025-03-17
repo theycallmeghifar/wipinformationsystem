@@ -15,7 +15,7 @@
           END AS statusText
         FROM " . $this->tableOrderItem . " oi
         JOIN location l ON l.locationId = oi.locationId
-        ORDER BY oi.createdDate DESC, oi.status ASC"
+        ORDER BY oi.status ASC, oi.createdDate DESC"
       );
 
       return $query->result();
@@ -32,10 +32,10 @@
       return $this->db->insert($this->tableOrderItem, $data);
     }
 
-    public function updateBoxMod($data)
+    public function updateOrderStatusMod($data)
     {
       $where = array(
-        'boxCode' => $data['boxCode'],
+        'orderId' => $data['orderId'],
       );
       $this->db->where($where);
       return $this->db->update($this->tableOrderItem, $data);
@@ -82,19 +82,21 @@
         WITH cte AS (
           SELECT 
             wb.wipBoxId,
-              wb.boxCode,
-              wbd.wipBoxDetailId, 
-              wbd.itemCode, 
-              wbd.cavity, 
-              wbd.quantity, 
-              SUM(wbd.quantity) OVER (PARTITION BY wbd.itemCode ORDER BY wipBoxDetailId) AS cumulative_quantity
-            FROM wip_box_detail wbd
-            JOIN wip_box wb ON wbd.wipBoxId = wb.wipBoxId
-            WHERE wbd.itemCode = ? 
-            OR wbd.cavity = ?
+            wb.boxCode,
+            wb.cavity, 
+            wbd.wipBoxDetailId, 
+            wbd.itemCode, 
+            wbd.quantity, 
+            SUM(wbd.quantity) OVER (PARTITION BY wbd.itemCode ORDER BY wipBoxDetailId) AS cumulative_quantity
+          FROM wip_box_detail wbd
+          JOIN wip_box wb ON wbd.wipBoxId = wb.wipBoxId
+            JOIN location l ON wb.locationId = l.locationId
+          WHERE (wbd.itemCode = ? OR wb.cavity = ?)
+            AND wb.orderStatus = 0
+            AND l.area = 'WIP'
         )
         SELECT * FROM cte
-        WHERE cumulative_quantity <= ?  
+        WHERE cumulative_quantity <= ? 
           OR (cumulative_quantity > ? AND cumulative_quantity - quantity < ?)
         ORDER BY wipBoxId;
       ";

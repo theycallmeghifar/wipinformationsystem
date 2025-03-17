@@ -118,11 +118,11 @@
                                         <div class="col-md-5">
                                             <div class="form-group align-items-center">
                                                 <div class="custom-control custom-radio d-block">
-                                                    <input class="custom-control-input" type="radio" id="TypeRadio1" name="customRadio" checked>
+                                                    <input class="custom-control-input" type="radio" id="TypeRadio1" name="customRadio" value="item" checked>
                                                     <label for="TypeRadio1" class="custom-control-label">Item</label>
                                                 </div>
                                                 <div class="custom-control custom-radio d-block">
-                                                    <input class="custom-control-input" type="radio" id="TypeRadio2" name="customRadio">
+                                                    <input class="custom-control-input" type="radio" id="TypeRadio2" name="customRadio" value="cavity">
                                                     <label for="TypeRadio2" class="custom-control-label">Cavity</label>
                                                 </div>
                                             </div>
@@ -130,7 +130,7 @@
                                                 <label class="col-sm-5 col-form-label text-label">Line<span style="color: red">*</span></label>
                                                 <div class="col-sm-7">
                                                     <div class="input-group">
-                                                        <select name="line" id="line" class="form-control select2" style="width: 180px;">
+                                                        <select name="locationId" id="locationId" class="form-control select2" style="width: 180px;">
                                                             <?php foreach ($location as $row) : ?> 
                                                                 <option value="<?= $row->locationId ?>" <?= ($row->locationId == set_value('locationId') ? 'selected' : '') ?> >
                                                                     <?= $row->line ?>
@@ -200,8 +200,15 @@
                             </div>
                             <form role="form" action="<?php echo site_url('orderItem/confirmOrderCon')?>" method="post" autocomplete="off" style="margin: 30px;">
                                 <div class="modal-body">
-                                    
                                     <div class="form-group">
+                                        <div class="form-group row align-items-center">
+                                            <label class="col-sm-5 col-form-label text-label">Order Id<span style="color: red">*</span></label>
+                                            <div class="col-sm-7">
+                                                <div class="input-group">
+                                                    <input type="text" id="orderId" name="orderId" class="form-control form-control-user"></input>
+                                                </div> 
+                                            </div>
+                                        </div>
                                         <table id="confirmationTable" class="table">
                                             <thead>
                                                 <tr>
@@ -221,8 +228,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Tolak</button>
-                                    <button type="submit" id="submit" class="btn btn-primary shadow-sm">Konfirmasi</button>
+                                    <button type="submit" name="action" value="reject" class="btn btn-danger">Tolak</button>
+                                    <button type="submit" name="action" value="accept" class="btn btn-primary shadow-sm">Konfirmasi</button>
                                 </div>
                             </form>
                         </div>
@@ -257,17 +264,17 @@ $data = ob_get_clean();
                         if (role == 1 && item.status == 0) {
                             actionButtons = `
                                 <td>
-                                    <a href="javascript:void(0);" class="fa fa-pencil color-muted confirmbtn" title="Confirm Order" style="margin-left: 15px;"></a>
+                                    <a href="javascript:void(0);" class="fa fa-pencil color-muted confirmbtn" title="Konfirmasi" style="margin-left: 15px;"></a>
                                 </td>
                             `;
-                        } else if (role == 1 && item.status != 1) {
+                        } else if (role == 1 && item.status != 0) {
                             actionButtons = `<td>-</td>`;
                         }
 
                         let badgeClass = "bg-secondary";
                         if (item.statusText === "Belum Dikonfirmasi") {
                             badgeClass = "bg-warning";
-                        } else if (item.statusText === "Diterima") {
+                        } else if (item.statusText === "Dikonfirmasi") {
                             badgeClass = "bg-primary";
                         } else if (item.statusText === "Ditolak") {
                             badgeClass = "bg-danger";
@@ -310,34 +317,52 @@ $data = ob_get_clean();
             
             $(document).on('click', '.confirmbtn', function() {
                 let row = $(this).closest('tr');
+                let orderId = row.find('td:eq(0)').text().trim();
                 let item = row.find('td:eq(2)').text().trim();
                 let quantity = row.find('td:eq(3)').text().trim();
 
+                $('#orderId').val(orderId);
+
                 $.ajax({
-                url: "<?= base_url('orderitem/getMatchingBoxCon') ?>",
-                type: "GET",
-                data: { item: item, quantity: quantity }, 
-                dataType: "json", 
-                success: function(data) {
-                    let tableRows = "";
-                    data.forEach(function(item) {
-                        tableRows += `
-                            <tr>                             
-                                <td hidden="true">${item.wipBoxId}</td>
-                                <td>${item.boxCode}</td>
-                                <td>${item.itemCode}</td>
-                                <td>${item.cavity}</td>
-                                <td>${item.quantity}</td>
-                                <td><button type="button" class="btn btn-danger btn-sm removeRow"><i class="fas fa-trash" style="color:white"></i></button></td>
-                            </tr>
-                        `;
-                    });
-                    $("#confirmationTable tbody").html(tableRows);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching data:", error);
-                }
-            });
+                    url: "<?= base_url('orderitem/getMatchingBoxCon') ?>",
+                    type: "GET",
+                    data: { item: item, quantity: quantity }, 
+                    dataType: "json", 
+                    success: function(data) {
+                        let tableRows = "";
+                        data.forEach(function(item, index) {
+                            tableRows += `
+                                <tr>                             
+                                    <td hidden="true">
+                                        <input type="hidden" name="wipBoxData[${index}][wipBoxId]" value="${item.wipBoxId}">
+                                    </td>
+                                    <td>${item.boxCode}</td>
+                                    <td>
+                                        ${item.itemCode}
+                                        <input type="hidden" name="wipBoxData[${index}][itemCode]" value="${item.itemCode}">
+                                    </td>
+                                    <td>
+                                        ${item.cavity}
+                                        <input type="hidden" name="wipBoxData[${index}][cavity]" value="${item.cavity}">
+                                    </td>
+                                    <td>
+                                        ${item.quantity}
+                                        <input type="hidden" name="wipBoxData[${index}][quantity]" value="${item.quantity}">
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm removeRow">
+                                            <i class="fas fa-trash" style="color:white"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        $("#confirmationTable tbody").html(tableRows);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
 
                 $('#acceptmodal').modal('show');
             });
@@ -365,37 +390,6 @@ $data = ob_get_clean();
                             $(this).closest("tr").remove();
                         }
                     });
-                }
-            });
-        });
-
-        $(document).on('click', '.rejectbtn', function() {
-            Swal.fire({
-                title: 'Reject Order?',
-                text: "Are you sure you want to reject this order?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#detailModal').modal('show');
-
-                    let $tr = $(this).closest('tr');
-                    let data = $tr.children("td").map(function() {
-                        return $(this).text();
-                    }).get();
-                    console.log(data);
-
-                    $('#boxCodeD').val(data[0]);
-                    $('#boxColorD').val(data[1]);
-                    $('#capacityD').val(data[2]);
-                    $('#locationD').val(data[3]);
-                    $('#usageStatusD').val(data[4]);
-                    $('#statusD').val(data[7]);
-                    $('#createdDateD').val(data[8]);
-                    $('#modifiedDateD').val(data[9]);
                 }
             });
         });

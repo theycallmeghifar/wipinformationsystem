@@ -44,7 +44,7 @@
       return $this->db->insert_id();
     }
 
-    public function updateWipBoxMod($data)
+    public function updateWipBoxOrderStatusMod($data)
     {
       $where = array(
         'wipBoxId' => $data['wipBoxId'],
